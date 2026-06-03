@@ -37,7 +37,7 @@ async function fetchAndCache(request) {
                 rv = new Response("Not found in cache.", { status: 404, statusText: "Not found in cache." });
             }
 
-            return addCoopCoepHeaders(rv);
+            return rv;
         }
 
         if (cachedResponse) {
@@ -52,41 +52,26 @@ async function fetchAndCache(request) {
         const response = await fetch(request);
 
         if (cachedResponse && response.status == 304) {
-            return addCoopCoepHeaders(cachedResponse);
+            return cachedResponse;
         }
 
         if (addToCache && response.status == 200) {
             await cache.put(request, response.clone());
         }
 
-        return addCoopCoepHeaders(response);
+        return response;
 
     } catch (e) {
 
         if (cachedResponse) {
             console.log('Served from cache: ' + request.url);
-            return addCoopCoepHeaders(cachedResponse);
+            return cachedResponse;
         }
 
         console.log('Not found in cache: ' + request.url);
 
         throw e;
     }
-}
-
-/**
- * Adds Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers
- * required for SharedArrayBuffer support (needed by Ren'Py WebAssembly).
- */
-function addCoopCoepHeaders(response) {
-    const newHeaders = new Headers(response.headers);
-    newHeaders.set('Cross-Origin-Opener-Policy', 'same-origin');
-    newHeaders.set('Cross-Origin-Embedder-Policy', 'require-corp');
-    return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: newHeaders,
-    });
 }
 
 
