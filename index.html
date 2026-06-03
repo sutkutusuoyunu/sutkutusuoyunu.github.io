@@ -15,7 +15,6 @@
   <link rel="icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
   <link rel="icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
   <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-  <!-- ios support -->
   <link rel="apple-touch-icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
@@ -24,195 +23,148 @@
   <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-
   <meta name="theme-color" content="#000" />
 
   <style>
-    html {
-      background: #444;
-      font-family: sans-serif;
-    }
-
-    body, html {
-      overscroll-behavior: none;
-    }
+    html { background: #444; font-family: sans-serif; }
+    body, html { overscroll-behavior: none; }
 
     #canvas, #overlayDiv {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-
-      width: 100%;
-      height: 100%;
-
-      border: 0 none;
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; border: 0 none;
     }
+    #canvas { background: #000; }
 
-    #canvas {
-      background: #000;
-    }
-
-    .visible {
-      visibility: visible;
-      opacity: 1.0;
-      transition: opacity .1s linear;
-    }
-
-    .hidden {
-      visibility: hidden;
-      opacity: 0;
-      transition: visibility 0s .25s, opacity .25s linear;
-    }
+    .visible { visibility: visible; opacity: 1.0; transition: opacity .1s linear; }
+    .hidden  { visibility: hidden;  opacity: 0;   transition: visibility 0s .25s, opacity .25s linear; }
 
     #statusDiv, #inputDiv {
-      background: rgba(0, 0, 0, 0.75);
-      width: 50%;
-      margin: auto;
-      min-width: 340px;
-      padding: 10px;
-
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-
+      background: rgba(0,0,0,0.75); width: 50%; margin: auto;
+      min-width: 340px; padding: 10px;
+      position: absolute; top: 0; left: 0; right: 0;
       border-radius: 0 0 5px 5px;
     }
+    #statusTextDiv { overflow: auto; max-height: 40vh; color: #ccc; font-size: 14px; }
+    #statusProgress { display: none; width: 100%; }
+    #inputDiv { width: 65%; padding-left: 10px; padding-right: 20px; }
+    #inputPrompt { color: #eee; font-size: 150%; margin-bottom: 1em; margin-top: 1em; }
+    #inputText { width: 100%; font-size: 175%; padding: 5px; background: inherit; color: #eee; }
+    #inputText:focus { color: #fff; }
 
-    #statusTextDiv {
-      overflow: auto;
-      max-height: 40vh;
-      color: #ccc;
-      font-size: 14px;
-    }
-
-    #statusProgress {
-      display: none;
-      width: 100%;
-    }
-
-    #inputDiv {
-      width: 65%;
-      padding-left: 10px;
-      padding-right: 20px;
-    }
-
-    #inputPrompt {
-      color: #eee;
-      font-size: 150%;
-      margin-bottom: 1em;
-      margin-top: 1em;
-
-    }
-
-    #inputText {
-      width: 100%;
-      font-size: 175%;
-      padding: 5px;
-      background: inherit;
-      color: #eee;
-    }
-
-    #inputText:focus {
-      color: #ffffff;
-    }
-
-    #ContextContainer {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      color: white;
-    }
-
-    #ContextContainer.shown {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 0px 0px 5px 0px;
-    }
-
+    #ContextContainer { position: absolute; left: 0; top: 0; color: white; }
+    #ContextContainer.shown { background: rgba(0,0,0,0.5); border-radius: 0 0 5px 0; }
     #ContextButton {
-      text-decoration: none;
-      color: lightgrey;
-      font-size: xx-large;
-      cursor: pointer;
-      user-select: none;
-      -moz-user-select: none;
-      padding: 10px 10px;
-      opacity: .75;
+      text-decoration: none; color: lightgrey; font-size: xx-large;
+      cursor: pointer; user-select: none; -moz-user-select: none;
+      padding: 10px; opacity: .75;
     }
-
-    #ContextButton:focus {
-      outline: none;
-      color: #ffffff;
-      opacity: 1.0;
-    }
-
+    #ContextButton:focus { outline: none; color: #fff; opacity: 1.0; }
     #ContextMenu a {
-      text-decoration: none;
-      color: lightgrey;
-      background: #444;
-      height: 48px;
-      width: 250px;
-      border-radius: 5px;
-      border: 1px solid lightgrey;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 5px 5px;
-      opacity: 1.0;
+      text-decoration: none; color: lightgrey; background: #444;
+      height: 48px; width: 250px; border-radius: 5px; border: 1px solid lightgrey;
+      display: flex; align-items: center; justify-content: center;
+      margin: 5px; opacity: 1.0;
     }
-
-    #ContextMenu a:hover {
-      text-decoration: none;
-      background: #666666;
-      color: #ffffff
-    }
-
-    #presplash {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        margin: auto;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
+    #ContextMenu a:hover { background: #666; color: #fff; }
   </style>
-
 </head>
 
 <body>
 
-<div id="presplash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;">
-  <img src="web-presplash.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
-</div>
-<script>
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      var p = document.getElementById('presplash');
-      if (p) p.style.display = 'none';
-    }, 2000);
-  });
-</script>
+  <!--
+    SPLASH OVERLAY
+    Uses inline styles with !important so nothing Ren'Py injects can override it.
+    renpy.js is only added to the page after the 15s timer completes.
+  -->
+  <div id="skt-splash" style="
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: 100% !important; height: 100% !important;
+    z-index: 2147483647 !important;
+    background: #000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  ">
+    <img src="web-splash.jpg" alt="" style="
+      max-width: 100% !important;
+      max-height: calc(100vh - 10px) !important;
+      object-fit: contain !important;
+      display: block !important;
+      pointer-events: none !important;
+    ">
+    <div style="
+      position: absolute !important;
+      bottom: 0 !important; left: 0 !important;
+      width: 100% !important; height: 6px !important;
+      background: rgba(255,255,255,0.2) !important;
+    ">
+      <div id="skt-bar" style="
+        height: 100% !important;
+        width: 0% !important;
+        background: #fff !important;
+      "></div>
+    </div>
+  </div>
+
+  <script>
+  // Runs before renpy-pre.js — captures the splash elements immediately.
+  // renpy.js is NOT in the HTML; we inject it only after the timer ends.
+  (function () {
+    var DURATION = 15000;
+    var splash = document.getElementById('skt-splash');
+    var bar    = document.getElementById('skt-bar');
+    var start  = null;
+    var done   = false;
+
+    function tick(ts) {
+      if (done) return;
+      if (!start) start = ts;
+      var pct = Math.min((ts - start) / DURATION, 1);
+      bar.style.setProperty('width', (pct * 100).toFixed(2) + '%', 'important');
+
+      if (pct < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        done = true;
+        finish();
+      }
+    }
+
+    function finish() {
+      // Hard-remove the splash — no fade, no CSS transition that could be cancelled
+      splash.parentNode.removeChild(splash);
+
+      // NOW load Ren'Py
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'renpy.js';
+      document.body.appendChild(s);
+    }
+
+    // Safety net: if rAF somehow stalls (background tab throttling),
+    // force-finish after DURATION + 2s
+    setTimeout(function () {
+      if (!done) { done = true; finish(); }
+    }, DURATION + 2000);
+
+    requestAnimationFrame(tick);
+  })();
+  </script>
 
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
   <div id="overlayDiv"></div>
 
-  <img id="presplash" src="web-presplash.jpg">
-
   <div id="ContextContainer">
-    <a id="ContextButton">&#8801;</a><br />
-    <div id="ContextMenu" style="display: none;">
-      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
-        style=display:none></input>
+    <a id="ContextButton">&#8801;</a><br>
+    <div id="ContextMenu" style="display:none;">
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)"
+             accept="application/zip" style="display:none">
       <a href="javascript:document.getElementById('ID_SavegamesImport').click();">Import Saves</a>
       <a href="javascript:onSavegamesExport();">Export Saves</a>
-      <a href="javascript:FSDownload('/log.txt', 'text/plain');">Download Log</a>
-      <a href="https://www.renpy.org/" target="_blank">
-          Powered by Ren'Py
-      </a>
-      </span>
+      <a href="javascript:FSDownload('/log.txt','text/plain');">Download Log</a>
+      <a href="https://www.renpy.org/" target="_blank">Powered by Ren'Py</a>
     </div>
   </div>
 
@@ -229,18 +181,14 @@
   </div>
 
   <script>
-      // The URL to game.zip, relative to the URL of this file.
-      window.gameZipURL = 'game.zip';
-
-      // Register the service worker.
-      if (navigator.serviceWorker) {
-          if (!navigator.serviceWorker.controller) {
-              navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
-          }
-      }
+    window.gameZipURL = 'game.zip';
+    if (navigator.serviceWorker && !navigator.serviceWorker.controller) {
+      navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
+    }
   </script>
-  <script src="renpy-pre.js"></script>
-  <script async type="text/javascript" src="renpy.js"></script>
-</body>
 
+  <script src="renpy-pre.js"></script>
+  <!-- renpy.js is injected dynamically after the splash timer ends -->
+
+</body>
 </html>
