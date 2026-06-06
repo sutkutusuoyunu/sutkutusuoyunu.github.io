@@ -1,86 +1,155 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Süt Kutusu Oyunu</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #0d0d0d;
-    font-family: 'Roboto', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  h1 {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 0.4rem;
-    background: linear-gradient(90deg, #ff4444, #ff9900, #ffe600, #44cc66, #4499ff, #aa44ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .tagline {
-    color: #555;
-    font-size: 0.85rem;
-    font-weight: 400;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 3.5rem;
-  }
-  .links {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-  }
-  .links a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-decoration: none;
-    padding: 1.1rem 0;
-    border-bottom: 1px solid #222;
-    color: #aaa;
-    font-size: 1rem;
-    font-weight: 400;
-    transition: color 0.15s, padding-left 0.15s;
-  }
-  .links a:first-child { border-top: 1px solid #222; }
-  .links a:hover { color: #ffe600; padding-left: 6px; }
-  .links a:hover .arrow { color: #ffe600; }
-  .arrow {
-    color: #333;
-    font-size: 1.1rem;
-    transition: color 0.15s;
-  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { min-height: 100vh; background: #080810; font-family: 'Inter', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .star { position: absolute; border-radius: 50%; background: white; animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s); }
+  @keyframes twinkle { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.8; } }
+
+  .page { position: relative; z-index: 1; width: 100%; max-width: 520px; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+
+  .header { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; }
+  .crown-img { width: 48px; height: 48px; object-fit: contain; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  h1 { font-family: 'Cinzel Decorative', serif; font-size: clamp(1.6rem, 4.5vw, 2.8rem); font-weight: 900; line-height: 1.15; background: linear-gradient(135deg, #ff4d4d 0%, #ff9900 15%, #ffe600 30%, #44ff88 45%, #00cfff 60%, #9944ff 75%, #ff44cc 90%, #ff4d4d 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: rainbowShift 6s ease infinite; letter-spacing: 0.03em; }
+  @keyframes rainbowShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+  .tagline { font-family: 'Cinzel', serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 6px; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+
+  .divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,230,0,0.4), rgba(255,100,100,0.4), rgba(100,200,255,0.4), transparent); }
+
+  .nav-cards { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+  .nav-card { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.4rem; background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08); border-radius: 14px; text-decoration: none; transition: all 0.22s ease; position: relative; overflow: hidden; }
+  .nav-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.22s ease; border-radius: 14px; }
+  .nav-card.play::before { background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(255,153,0,0.08)); }
+  .nav-card.dl::before { background: linear-gradient(135deg, rgba(68,255,136,0.08), rgba(0,207,255,0.08)); }
+  .nav-card.docs::before { background: linear-gradient(135deg, rgba(153,68,255,0.08), rgba(255,68,204,0.08)); }
+  .nav-card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
+  .nav-card:hover::before { opacity: 1; }
+
+  .card-left { display: flex; align-items: center; gap: 0.9rem; }
+  .card-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+  .play .card-icon { background: linear-gradient(135deg, rgba(255,77,77,0.2), rgba(255,153,0,0.2)); border: 0.5px solid rgba(255,120,60,0.3); }
+  .dl .card-icon { background: linear-gradient(135deg, rgba(68,255,136,0.2), rgba(0,207,255,0.2)); border: 0.5px solid rgba(50,220,180,0.3); }
+  .docs .card-icon { background: linear-gradient(135deg, rgba(153,68,255,0.2), rgba(255,68,204,0.2)); border: 0.5px solid rgba(200,80,220,0.3); }
+  .card-icon img { width: 24px; height: 24px; object-fit: contain; }
+
+  .card-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 0.15rem; letter-spacing: 0.02em; }
+  .card-desc { font-size: 0.7rem; color: rgba(255,255,255,0.28); }
+  .card-arrow { font-size: 1rem; color: rgba(255,255,255,0.15); transition: all 0.2s ease; flex-shrink: 0; }
+  .nav-card:hover .card-arrow { color: rgba(255,255,255,0.45); transform: translateX(4px); }
+
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; width: 100%; }
+  .feature-card { background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.2rem 1rem; text-align: center; }
+  .feature-icon-img { width: 36px; height: 36px; object-fit: contain; margin: 0 auto 0.6rem; display: block; }
+  .feature-title { font-family: 'Cinzel', serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .f1 .feature-title { color: #ff9966; }
+  .f2 .feature-title { color: #66ffcc; }
+  .f3 .feature-title { color: #cc88ff; }
+  .feature-desc { font-size: 0.68rem; color: rgba(255,255,255,0.22); line-height: 1.5; }
+
+  .badge-row { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; width: 100%; }
+  .badge { font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 999px; border: 0.5px solid; }
+  .badge.b1 { color: rgba(255,153,60,0.7); border-color: rgba(255,153,60,0.2); background: rgba(255,153,60,0.05); }
+  .badge.b2 { color: rgba(100,220,180,0.7); border-color: rgba(100,220,180,0.2); background: rgba(100,220,180,0.05); }
+  .badge.b3 { color: rgba(180,100,255,0.7); border-color: rgba(180,100,255,0.2); background: rgba(180,100,255,0.05); }
+
+  .footer-line { font-size: 0.6rem; letter-spacing: 2px; color: rgba(255,255,255,0.1); font-family: 'Cinzel', serif; text-transform: uppercase; }
+
+  @media (max-width: 480px) { .features-grid { grid-template-columns: 1fr; } h1 { font-size: 1.6rem; } }
 </style>
 </head>
 <body>
-  <h1>Süt Kutusu Oyunu</h1>
-  <p class="tagline">Siteler</p>
-  <nav class="links">
-    <a href="https://sutkutusuoyunu.github.io/play/">
-      <span>Play Süt Kutusu Oyunu 1</span>
-      <span class="arrow">&#8594;</span>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+  <div class="header">
+    <img src="crown.png" alt="Crown" class="crown-img">
+    <h1>Süt Kutusu<br>Oyunu</h1>
+    <p class="tagline">Siteler &amp; Kaynaklar</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <nav class="nav-cards">
+    <a class="nav-card play" href="https://sutkutusuoyunu.github.io/play/">
+      <div class="card-left">
+        <div class="card-icon"><img src="gaming.png" alt="Play"></div>
+        <div>
+          <div class="card-title">Play Süt Kutusu Oyunu 1</div>
+          <div class="card-desc">Oyunu tarayıcında oyna</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
     </a>
-    <a href="https://sutkutusuoyunu.github.io/downloads/">
-      <span>Downloads</span>
-      <span class="arrow">&#8594;</span>
+    <a class="nav-card dl" href="https://sutkutusuoyunu.github.io/downloads/">
+      <div class="card-left">
+        <div class="card-icon"><img src="download.png" alt="Download"></div>
+        <div>
+          <div class="card-title">Downloads</div>
+          <div class="card-desc">İndir ve yükle</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
     </a>
-    <a href="https://sutkutusuoyunu.github.io/documentation/">
-      <span>Documentation</span>
-      <span class="arrow">&#8594;</span>
+    <a class="nav-card docs" href="https://sutkutusuoyunu.github.io/documentation/">
+      <div class="card-left">
+        <div class="card-icon"><img src="docs.png" alt="Documentation"></div>
+        <div>
+          <div class="card-title">Documentation</div>
+          <div class="card-desc">Teknik rehber ve bilgiler</div>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
     </a>
   </nav>
+
+  <!-- Extra gap between nav links and feature squares -->
+  <div style="height: 0.75rem;"></div>
+
+  <div class="features-grid">
+    <div class="feature-card f1">
+      <img src="fire.png" alt="Sürükleyici" class="feature-icon-img">
+      <div class="feature-title">Sürükleyici</div>
+      <div class="feature-desc">Eşsiz bir süt kutusu deneyimi</div>
+    </div>
+    <div class="feature-card f2">
+      <img src="lightning.png" alt="Hızlı" class="feature-icon-img">
+      <div class="feature-title">Hızlı</div>
+      <div class="feature-desc">Tarayıcıda anında yükle ve oyna</div>
+    </div>
+    <div class="feature-card f3">
+      <img src="free.png" alt="Ücretsiz" class="feature-icon-img">
+      <div class="feature-title">Ücretsiz</div>
+      <div class="feature-desc">Tamemen ücretsiz ve açık kaynak</div>
+    </div>
+  </div>
+
+  <div class="badge-row">
+    <span class="badge b1">Tarayıcı Oyunu</span>
+    <span class="badge b2">Türkçe Yapım</span>
+    <span class="badge b3">Açık Kaynak</span>
+  </div>
+
+  <p class="footer-line">© Süt Kutusu Oyunu — Tüm hakları saklıdır</p>
+</div>
+
+<script>
+  const s = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const el = document.createElement('div');
+    el.className = 'star';
+    const sz = Math.random() * 2 + 0.5;
+    el.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:-${Math.random()*4}s;`;
+    s.appendChild(el);
+  }
+</script>
 </body>
 </html>
